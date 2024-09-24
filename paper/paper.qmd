@@ -1,13 +1,12 @@
 ---
-title: "My title"
+title: "Are Lower Income Communities Given More Noise Exemptions"
 subtitle: "My subtitle if needed"
 author: 
-  - First author
-  - Another author
-thanks: "Code and data are available at: LINK."
+  - Siddharth Gowda
+thanks: "Open Data Toronto: https://open.toronto.ca/"
 date: today
 date-format: long
-abstract: "First sentence. Second sentence. Third sentence. Fourth sentence."
+abstract: "TODO: FINISH THIS LATER"
 format: pdf
 number-sections: true
 bibliography: references.bib
@@ -19,7 +18,9 @@ bibliography: references.bib
 #| message: false
 
 library(tidyverse)
-library(palmerpenguins)
+library(knitr)
+
+# TODO: switch area from kms2 to 10kms2
 ```
 
 
@@ -33,110 +34,290 @@ The remainder of this paper is structured as follows. @sec-data....
 
 # Data {#sec-data}
 
-Some of our data is of penguins (@fig-bills), from @palmerpenguins.
-
 ```{r}
-#| label: fig-bills
-#| fig-cap: Bills of penguins
-#| echo: false
-
-ggplot(penguins, aes(x = island, fill = species)) +
-  geom_bar(alpha = 0.8) +
-  scale_fill_manual(values = c("darkorange","purple","cyan4"),
-                    guide = "none") +
-  theme_minimal() +
-  facet_wrap(~species, ncol = 1) +
-  coord_flip()
-```
-
-Talk more about it.
-
-And also planes (@fig-planes). (You can change the height and width, but don't worry about doing that until you have finished every other aspect of the paper - Quarto will try to make it look nice and the defaults usually work well once you have enough text.)
-
-```{r}
-#| label: fig-planes
-#| fig-cap: Relationship between wing length and width
+#| label: tbl-fulldatasample
+#| tbl-cap: "Sample of Noise Exmption Dataset"
 #| echo: false
 #| warning: false
 #| message: false
 
-analysis_data <- read_csv(here::here("data/analysis_data/analysis_data.csv"))
 
-analysis_data |> 
-  ggplot(aes(x = width, y = length)) +
-  geom_point(alpha = 0.8) +
-  theme_minimal() +
-  labs(x = "Wing width (mm)",
-       y = "Wing length (mm)")
+display_column_names <- c("Permit Type", "Ward Number", "Exemption Issue Year",
+                          "Expected Permit End Year", 
+                          "Ward Total Area (km squared)",
+                          "Ward Total Population", "Ward Median Income (CAD)")
+
+noise_exemp_ward_data_og <- read_csv(
+  "../data/analysis_data/clean_noise_exemp_ward_data.csv")
+
+noise_exemp_ward_data_og %>% 
+  select(!id) %>% 
+  head(1) %>% 
+  kable(col.names = display_column_names)
 ```
 
-Talk way more about it. 
-
-
-
-# Model
-
-The goal of our modelling strategy is twofold. Firstly,...
-
-Here we briefly describe the Bayesian analysis model used to investigate... Background details and diagnostics are included in [Appendix -@sec-model-details].
-
-## Model set-up
-
-Define $y_i$ as the number of seconds that the plane remained aloft. Then $\beta_i$ is the wing width and $\gamma_i$ is the wing length, both measured in millimeters.  
-
-\begin{align} 
-y_i|\mu_i, \sigma &\sim \mbox{Normal}(\mu_i, \sigma) \\
-\mu_i &= \alpha + \beta_i + \gamma_i\\
-\alpha &\sim \mbox{Normal}(0, 2.5) \\
-\beta &\sim \mbox{Normal}(0, 2.5) \\
-\gamma &\sim \mbox{Normal}(0, 2.5) \\
-\sigma &\sim \mbox{Exponential}(1)
-\end{align}
-
-We run the model in R [@citeR] using the `rstanarm` package of @rstanarm. We use the default priors from `rstanarm`.
-
-
-### Model justification
-
-We expect a positive relationship between the size of the wings and time spent aloft. In particular...
-
-We can use maths by including latex between dollar signs, for instance $\theta$.
-
-
-# Results
-
-Our results are summarized in @tbl-modelresults.
+## Data History
 
 ```{r}
+#| label: fig-permityears
+#| tbl-cap: "TODO"
+#| tbl-sub: ["TODO", "TODO", "TODO"]
+#| layout-ncol: 2
 #| echo: false
-#| eval: true
 #| warning: false
 #| message: false
 
-library(rstanarm)
+noise_exemp_ward_data_og %>% group_by(issue_year) %>% 
+  summarise(n = n_distinct(id)) %>% kable(
+    col.names = c("Issue Year", "Number of Exemptions")
+  )
 
-first_model <-
-  readRDS(file = here::here("models/first_model.rds"))
+noise_exemp_ward_data_og %>% group_by(expected_end_year) %>% 
+  summarise(n = n_distinct(id)) %>% kable(
+    col.names = c("Expected End Year", "Number of Exemptions")
+  )
+
+
+
+```
+
+\newpage
+
+## Types of Permits
+
+```{r}
+#| label: tbl-exemptioncategories
+#| tbl-cap: "All Exemption Categories"
+#| echo: false
+#| warning: false
+#| message: false
+
+full_permit_type_table = noise_exemp_ward_data_og %>% group_by(permit_type) %>% 
+  summarise(freq = n_distinct(id)) %>% 
+  kable(col.names = c("Type", "Number of Permits"))
+
+# Amplfied sound is for things like concerts or events
+
+# Construction - self explanatory
+# Continous pour (like pouring concerete, essentially like constructions)
+# Large Carne (need carne to move things, similar to construction)
+# Other sound - self explanatory
+
+full_permit_type_table
 ```
 
 ```{r}
+#| label: tbl-relevantexemptioncategories
+#| tbl-cap: "Relevant Exemption Categories"
 #| echo: false
-#| eval: true
-#| label: tbl-modelresults
-#| tbl-cap: "Explanatory models of flight time based on wing width and wing length"
 #| warning: false
+#| message: false
 
-modelsummary::modelsummary(
-  list(
-    "First model" = first_model
-  ),
-  statistic = "mad",
-  fmt = 2
-)
+# Will merge these into construction, non-construction, other
+noise_exemp_ward_data = noise_exemp_ward_data_og %>% 
+  mutate(permit_type = case_when(
+    str_detect(permit_type, "amplified") ~ "non-construction",
+    str_detect(permit_type, "(construction|continuous|crane)") ~ "construction",
+    str_detect(permit_type, "other") ~ "other",
+    TRUE ~ "other"
+  ))
+
+
+construction_permit_type_table = noise_exemp_ward_data %>% 
+  group_by(permit_type) %>% 
+  summarise(freq = n_distinct(id)) %>% 
+  kable(col.names = c("Type", "Number of Permits"))
+
+construction_permit_type_table
+
+
+```
+
+\newpage
+
+## Ward Information
+
+```{r}
+#| label: fig-wardtotalexemptions
+#| fig-cap: "Noise Exemptions by Ward"
+#| echo: false
+#| warning: false
+#| message: false
+# ward, number of occurrences
+
+ward_exemptions <- noise_exemp_ward_data %>% 
+  select(ward, id, permit_type) %>% 
+  group_by(ward) %>% 
+  summarise(exemptions = n_distinct(id),
+            construction_exemptions = sum(permit_type == "construction"),
+            non_construction_exemptions = 
+              sum(permit_type == "non-construction"),
+            other_exemptions = sum(permit_type == "other"))
+
+ward_exemptions_bar <- noise_exemp_ward_data %>% 
+  ggplot(aes(x = ward, fill = permit_type)) +
+  geom_bar() +
+  theme_linedraw() +
+  labs(x = "Ward Number", y = "Number of Noise Exemptions")
+
+ward_exemptions_bar
+```
+
+```{r}
+#| label: fig-warddetails
+#| fig-cap: "All Relevant Ward Details"
+#| fig-subcap: ["Ward Area","Ward Population", "Ward Median Income"]
+#| layout-ncol: 3
+#| echo: false
+#| warning: false
+#| message: false
+
+ward_dataset <- noise_exemp_ward_data %>% 
+  select(ward, ward_area_km2, ward_population, ward_median_income) %>%
+  # remove duplicates that occur because of data being joined
+  distinct()
+
+ward_area_plot = ward_dataset %>% 
+  ggplot(aes(x = ward, y = ward_area_km2)) +
+  geom_col() +
+  theme_linedraw() +
+  labs(x = "Ward Number", y = "Area (km squared)")
+  
+ward_population_plot = ward_dataset %>% 
+  ggplot(aes(x = ward, y = ward_population)) +
+  geom_col() +
+  theme_linedraw() +
+  labs(x = "Ward Number", y = "Population")
+
+ward_median_income_plot = ward_dataset %>% 
+  ggplot(aes(x = ward, y = ward_median_income)) +
+  geom_col() +
+  theme_linedraw() +
+  labs(x = "Ward Number", y = "Median Income (CAD)")
+
+
+
+ward_area_plot
+ward_population_plot
+ward_median_income_plot
+```
+
+\newpage
+
+## Income Noise Exemption Relationship
+
+
+```{r}
+#| label: fig-wardtotalexemptionsscatterplots
+#| fig-cap: "Noise Exemptions by Ward"
+#| fig-subcap: ["TODO", "TODO", "TODO"]
+#| layout-ncol: 3
+#| echo: false
+#| warning: false
+#| message: false
+
+
+correlation_data <- noise_exemp_ward_data %>% 
+  group_by(ward, ward_median_income, ward_area_km2, 
+           ward_population) %>% 
+  summarise(
+    num_exemptions = n_distinct(id),
+    construction_exemptions = sum(permit_type == "construction"),
+    non_construction_exemptions = sum(permit_type == "non-construction"),
+    other_exemptions = sum(permit_type == "other")
+  )
+
+income_num_exemption <- correlation_data %>% 
+  ggplot(aes(ward_median_income, num_exemptions)) +
+  geom_point(alpha = 0.7) +
+  theme_linedraw() +
+  labs(x = "Median Income", y = "Number of Exemptions") + 
+  geom_text(aes(label = ward), vjust = 1.5, hjust = 0.5, size = 2)
+
+income_nonconstruction_exemptions <- correlation_data %>% 
+  ggplot(aes(ward_median_income, non_construction_exemptions)) +
+  geom_point(alpha = 0.7) +
+  theme_linedraw() +
+  labs(x = "Median Income", y = "Number of Non-construction Exemptions") + 
+  geom_text(aes(label = ward), vjust = 1.5, hjust = 0.5, size = 2)
+
+income_construction_exemptions <- correlation_data %>% 
+  ggplot(aes(ward_median_income, construction_exemptions)) +
+  geom_point(alpha = 0.7) +
+  theme_linedraw() +
+  labs(x = "Median Income", y = "Number of Construction Exemptions") + 
+  geom_text(aes(label = ward), vjust = 1.5, hjust = 0.5, size = 2)
+
+
+income_num_exemption
+income_nonconstruction_exemptions
+income_construction_exemptions
+
+# TODO: delete before submission
+test = correlation_data %>% filter(ward != 10)
+cor.test(test$ward_median_income, test$num_exemptions)
+cor.test(correlation_data$ward_median_income, correlation_data$num_exemptions)
+
+
+# keep in mind that relationship looks weaker after potetnial outlier point
+# removed
+
+# TODO: ADD a section about these graphs even after they have been removed
+```
+
+\newpage
+
+## Testing for Hidden Confounding relationships
+
+```{r}
+#| label: fig-confoudingplots
+#| fig-cap: "Ward Median Income Relationship With Common Potential Confounds"
+#| fig-subcap: ["TODO", "TODO"]
+#| layout-ncol: 3
+#| echo: false
+#| warning: false
+#| message: false
+
+
+correlation_data <- noise_exemp_ward_data %>% 
+  select(ward, ward_area_km2, ward_population, ward_median_income)
+
+ward_income_pop <- correlation_data %>% filter(ward != 10) %>% 
+  ggplot(aes(ward_median_income, ward_population)) +
+  geom_point(alpha = 0.7) +
+  theme_linedraw() +
+  labs(x = "Median Income", y = "Population") + 
+  geom_text(aes(label = ward), vjust = 1.5, hjust = 0.5, size = 2)
+
+ward_income_area <- correlation_data %>% 
+  ggplot(aes(ward_median_income, ward_area_km2)) +
+  geom_point(alpha = 0.7) +
+  theme_linedraw() +
+  labs(x = "Median Income", y = "ward_area_plot (kms squared)") + 
+  geom_text(aes(label = ward), vjust = 1.5, hjust = 0.5, size = 2)
+
+
+ward_income_pop
+ward_income_area
+
+# TODO: DELETE BELOW CODE
+
+cor.test(correlation_data$ward_median_income, correlation_data$ward_population)
+cor.test(correlation_data$ward_median_income, correlation_data$ward_area_km2)
+
+test = correlation_data %>% filter(ward != 10)
+cor.test(test$ward_median_income, test$ward_population)
+cor.test(test$ward_median_income, test$ward_area_km2)
+
+# keep in mind that relationship looks weaker after potetnial outlier point
+# removed (this is especially true for population)
 ```
 
 
+```
 
+
+\newpage
 
 # Discussion
 
@@ -150,72 +331,10 @@ If my paper were 10 pages, then should be be at least 2.5 pages. The discussion 
 
 ## Weaknesses and next steps
 
-Weaknesses and next steps should also be included.
-
-\newpage
-
-\appendix
-
-# Appendix {-}
-
-
-# Additional data details
-
-# Model details {#sec-model-details}
-
-## Posterior predictive check
-
-In @fig-ppcheckandposteriorvsprior-1 we implement a posterior predictive check. This shows...
-
-In @fig-ppcheckandposteriorvsprior-2 we compare the posterior with the prior. This shows... 
-
-```{r}
-#| eval: true
-#| echo: false
-#| message: false
-#| warning: false
-#| label: fig-ppcheckandposteriorvsprior
-#| layout-ncol: 2
-#| fig-cap: "Examining how the model fits, and is affected by, the data"
-#| fig-subcap: ["Posterior prediction check", "Comparing the posterior with the prior"]
-
-pp_check(first_model) +
-  theme_classic() +
-  theme(legend.position = "bottom")
-
-posterior_vs_prior(first_model) +
-  theme_minimal() +
-  scale_color_brewer(palette = "Set1") +
-  theme(legend.position = "bottom") +
-  coord_flip()
-```
-
-## Diagnostics
-
-@fig-stanareyouokay-1 is a trace plot. It shows... This suggests...
-
-@fig-stanareyouokay-2 is a Rhat plot. It shows... This suggests...
-
-```{r}
-#| echo: false
-#| eval: true
-#| message: false
-#| warning: false
-#| label: fig-stanareyouokay
-#| fig-cap: "Checking the convergence of the MCMC algorithm"
-#| fig-subcap: ["Trace plot", "Rhat plot"]
-#| layout-ncol: 2
-
-plot(first_model, "trace")
-
-plot(first_model, "rhat")
-```
-
-
+Weaknesses/Limitations and next steps should also be included.
 
 \newpage
 
 
 # References
-
 
