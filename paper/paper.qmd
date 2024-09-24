@@ -125,7 +125,6 @@ noise_exemp_ward_data_og %>% group_by(expected_end_year) %>%
 
 The table shows that almost all permits have been issued in 2024 and expected to end sometime in 2024 or 2025. It's is important to note that this was not deliberate choice and that this is merely a limitation of the data. However, this should not be viewed as a limitation because having all of the data being from 2019 and beyond makes sure that all this data is relevant to how noise exemption permits are issued now.
 
-\newpage
 
 ### Types of Permits {#sec-permittypes}
 
@@ -150,7 +149,9 @@ full_permit_type_table = noise_exemp_ward_data_og %>% group_by(permit_type) %>%
 full_permit_type_table
 ```
 
-Noise permits are applied to for a variety of reasons. These are all the ones listed in the data set. In reality there are more and take a look @NoiseToronto if interested in finding out more. It's clear that amplified sounds which are often required for things like concerted are the most common form of noise permit exemption. 
+Noise permits are applied to for a variety of reasons. These are all the ones listed in the data set. In reality there are more and take a look @NoiseToronto if interested in finding out more. It's clear that amplified sounds which are often required for things like concerted are the most common form of noise permit exemption.
+
+TODO: add name and captions
 
 | Permit Type           | Description                                                   |
 |-------------------------|---------------------------------------------------------------|
@@ -229,7 +230,7 @@ ward_exemptions_bar
 ```{r}
 #| label: tbl-wardexemptionssummary
 #| tab-cap: "Noise Exemptions Summary And Outliers"
-#| fig-subcap: ["Summary", "Outliers"]
+#| tbl-subcap: ["Summary", "Outliers"]
 #| layout-ncol: 2
 #| echo: false
 #| warning: false
@@ -268,8 +269,6 @@ ward_exemption_outliers %>% kable()
 Based on the @fig-wardtotalexemptions we can see that most wards give out more non-construction permits that construction permits. Hence, it's important to see how income is related to number of exemptions based on each type, so general data results are not biased towards non-constructive exemptions.
 
 Moreover, from @fig-wardtotalexemptions and @tbl-wardexemptionssummary, it's clear that wards 13, 11, and especially ten are outlines in terms of number of exemptions given compared to the rest of the data. However, for the purpose of this paper, we will not consider these data points as outliers, so they will not be discarded from the analysis. This is these are still wards of Toronto and their wards cannot be excluded when determining any conclusion or relationships.
-
-\newpage
 
 ## Income Noise Exemption Relationship
 
@@ -329,15 +328,15 @@ income_construction_exemptions
 # TODO: ADD a section about these graphs even after they have been removed
 ```
 
-Based on the @fig-wardtotalexemptionsscatterplots. There is not seem to be a negative relation ship between median ward income and number of exemptions. However, by looking at the plot, there does seem to me a moderate postive relationship between median income and number of exemptions for all types of permit, although the constrution permit plot's relationship does apear to be weaker.
+Based on the @fig-wardtotalexemptionsscatterplots. There is not seem to be a negative relation ship between median ward income and number of exemptions. However, by looking at the plot, there does seem to me a moderate positive relationship between median income and number of exemptions for all types of permit, although the construction permit plot's relationship does appear to be weaker.
 
-It is important to note that if we hypothetically removed the outliers (ward 10, 11, 13), the relationship would appear to be a bit weaker, but the relationship still seems reasonable.
+It is important to note that if we hypothetically removed the outliers (ward 10, 11, 13), the relationship would appear to be a bit weaker, but there still appears to be a moderate positive relationship.
 
 ## Testing for Hidden Confounding relationships
 
 ```{r}
 #| label: fig-confoudingplots
-#| fig-cap: "Ward Median Income Relationship With Common Potential Confounds"
+#| fig-cap: "Ward Population impact on Medium Impact"
 #| fig-subcap: ["TODO", "TODO"]
 #| layout-ncol: 2
 #| echo: false
@@ -345,30 +344,39 @@ It is important to note that if we hypothetically removed the outliers (ward 10,
 #| message: false
 
 
-correlation_data <- noise_exemp_ward_data %>% 
+pop_exemptions = correlation_data %>% ggplot(aes(ward_population, num_exemptions)) +
+  geom_point(alpha = 0.7) +
+  theme_linedraw() +
+  labs(y = "Exemptions", x = "Population") + 
+  geom_text(aes(label = ward), vjust = 1.5, hjust = 0.5, size = 2)
+
+
+correlation_data_confound <- noise_exemp_ward_data %>% 
   select(ward, ward_area_km2, ward_population, ward_median_income)
 
-ward_income_pop <- correlation_data %>% 
-  ggplot(aes(ward_population, ward_median_income, )) +
+ward_income_pop <- correlation_data_confound %>% 
+  ggplot(aes(ward_population, ward_median_income)) +
   geom_point(alpha = 0.7) +
   theme_linedraw() +
   labs(y = "Median Income", x = "Population") + 
   geom_text(aes(label = ward), vjust = 1.5, hjust = 0.5, size = 2)
 
-ward_income_area <- correlation_data %>% 
-  ggplot(aes(ward_area_km2, ward_median_income)) +
-  geom_point(alpha = 0.7) +
-  theme_linedraw() +
-  labs(y = "Median Income", x = "ward area (kms squared)") + 
-  geom_text(aes(label = ward), vjust = 1.5, hjust = 0.5, size = 2)
+# ward_income_area <- correlation_data %>% 
+#   ggplot(aes(ward_area_km2, ward_median_income)) +
+#   geom_point(alpha = 0.7) +
+#   theme_linedraw() +
+#   labs(y = "Median Income", x = "ward area (kms squared)") + 
+#   geom_text(aes(label = ward), vjust = 1.5, hjust = 0.5, size = 2)
 
 
 ward_income_pop
-ward_income_area
-```
-@fig-confoudingplots explores if median income can be predicted by a ward's population size or area. Based on the plots, there does not appear to be a reltionship between ward median income and the ward's area. As for population, there does seem to be a moderate to weak relationship between ward population and median income.
+pop_exemptions
+# ward_income_area
 
-Nevertheless, if we hypotectically remove the outliers from population graph. Then there is no relationship between population and median income.
+```
+@fig-confoudingplots explores a ward's population is a good predictor of a ward's population and the number of permit exemptions given. Based on the plots there does seem to be a moderate positive relationship between a ward's population and a ward's medium income. Likewise, there is a moderate positive relationship between ward population and the number of noise exemptions a ward has given although this reltionship is not as strong as population and median income.
+
+However, we need to also consider that if we hypothetically remove the outlines from population graph. Then there appeared to be very little if not no relationship between population and median income.
 
 \newpage
 
