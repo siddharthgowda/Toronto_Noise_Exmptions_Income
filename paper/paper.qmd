@@ -270,7 +270,7 @@ Based on the @fig-wardtotalexemptions we can see that most wards give out more n
 
 Moreover, from @fig-wardtotalexemptions and @tbl-wardexemptionssummary, it's clear that wards 13, 11, and especially ten are outlines in terms of number of exemptions given compared to the rest of the data. However, for the purpose of this paper, we will not consider these data points as outliers, so they will not be discarded from the analysis. This is these are still wards of Toronto and their wards cannot be excluded when determining any conclusion or relationships.
 
-## Income Noise Exemption Relationship
+## Income Noise Exemption Relationship {#sec-relationships}
 
 
 ```{r}
@@ -374,7 +374,7 @@ pop_exemptions
 # ward_income_area
 
 ```
-@fig-confoudingplots explores a ward's population is a good predictor of a ward's population and the number of permit exemptions given. Based on the plots there does seem to be a moderate positive relationship between a ward's population and a ward's medium income. Likewise, there is a moderate positive relationship between ward population and the number of noise exemptions a ward has given although this reltionship is not as strong as population and median income.
+@fig-confoudingplots explores a ward's population is a good predictor of a ward's population and the number of permit exemptions given. Based on the plots there does seem to be a moderate positive relationship between a ward's population and a ward's medium income. Likewise, there is a moderate positive relationship between ward population and the number of noise exemptions a ward has given although this relationship is not as strong as population and median income.
 
 However, we need to also consider that if we hypothetically remove the outlines from population graph. Then there appeared to be very little if not no relationship between population and median income.
 
@@ -382,25 +382,27 @@ However, we need to also consider that if we hypothetically remove the outlines 
 
 # Discussion
 
-## First discussion point {#sec-first-point}
+TODO: add correlation numbers, and other numbers
 
-If my paper were 10 pages, then should be be at least 2.5 pages. The discussion is a chance to show off what you know and what you learnt from all this. 
+Based on @sec-relationships, we have evidence that suggests that noise exemption permits are not disproportionately given out to lower-income communities. This was done by look at the relationship between medium income of wards and the total permits given in those wards. Furthermore, after cases for the types of permits given, we found no evidence for their being more construction related permits or non-constructions permits given to lower income wards.
 
-## Second discussion point
+This finding can be used in a variety of ways. For one, since we know that usually lower income communities are more likely to affected by noise pollution, we now understand that this noise pollution typically does not come from government noise exemption permits. Hence, city staff and officials should focus their efforts on combating other forms of noise pollution in low-income eras.
 
-## Third discussion point
+## Unexpected Relationship {#sec-first-point}
+
+Surprisingly, we discovered that there is a moderate positive relationship between a ward's median income and the number of exemptions given. This was also true when casing for construction and non-construction based permits. For the construction permits, it is reasonable to assume that higher income-areas have more construction permits since more companies will want to invest their, build building, and those same companies and people will need to continue to maintain those building. So, the city could potentially benefit by investing more in these lower income areas. However, it is a bit unclear why there are more non-construction (amplified sound) exemptions. Nevertheless, city officials could use this finding to discuss whether or not these exemptions for amplified sound are being given out too frequently especially since they are oftentimes not necessary for growing the community like construction related ones are.
+
+## Potential Confounds
+
+A ward's population was also found to be associated with a ward's number of noise exemptions. The relationship is understandable because ward's with more people will have more activities and more construction to meet the needs of those people, so it makes sense to have those permits. 
 
 ## Weaknesses and Next Steps
 
-Weaknesses/Limitations and next steps should also be included.
+The biggest weakness in this study was the use of wards as aggregators. The loss of specificity of the data when using wards made a few outliers (Wards 10, 11, and 13) have significant impact on the potential relationships that could be formed with income and noise exemptions. Unfortunate, wards 10, 11, and 13 cannot be ignored until most outliers. This is because there are only 25 wards in Toronto, so removing three data points is removing a lot of data. Moreover though, the data from these wards are not junk they are accurate reflection how noise and income are related in Toronto.
 
-\newpage
+Additionally, using wards to determine socio-economic status can quickly lead to over generalized results. In particular, simply because a ward on average is richer than other wards, it does not mean that particular area where the noise permit has been used given is a rich area.
 
-<!-- TODO: DELETE THIS CODE AND MOVE IT SOMEWHERE ELSE  -->
-
-# Special Thanks
-
-@citeR and @rohan.
+In terms of next steps, the first step would be to determine even more specifically the socioeconomic status of an area based on a specific address given in the application permit. Then based on this do similar analysis to determine if there is a true relationship between income and noise permits. Furthermore, in future studies regarding this topic, we would benefit from trying to model the relationship income and noise exemptions. Not only does create a more in depth quantification of the relationship, it also provides a much more throughout way of factoring for confounding variables.
 
 \newpage
 
