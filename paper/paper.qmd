@@ -394,9 +394,9 @@ Surprisingly, we discovered that there is a moderate positive relationship betwe
 
 ## Potential Confounds
 
-A ward's population was also found to be associated with a ward's number of noise exemptions. The relationship is understandable because ward's with more people will have more activities and more construction to meet the needs of those people, so it makes sense to have those permits. 
+A ward's population was also found to be associated with a ward's number of noise exemptions. The relationship is understandable because ward's with more people will have more activities and more construction to meet the needs of those people, so it makes sense to have those permits. This might invalidate the finding that more median income has a positive relationship with number of permits for a ward if there is a relationship with population and ward medium income: and there is a moderate positive relationship. However, after removing the potential outliers (ward 10, 11, and 13) there appears to me no relationship between the two variables. Therefore, further explore would need to be done to fix determine whether or no this is a confounding relationship. See section @sec-weaknessnextsteps for more dicussion on confounding variables.
 
-## Weaknesses and Next Steps
+## Weaknesses and Next Steps {#sec-weaknessnextsteps}
 
 The biggest weakness in this study was the use of wards as aggregators. The loss of specificity of the data when using wards made a few outliers (Wards 10, 11, and 13) have significant impact on the potential relationships that could be formed with income and noise exemptions. Unfortunate, wards 10, 11, and 13 cannot be ignored until most outliers. This is because there are only 25 wards in Toronto, so removing three data points is removing a lot of data. Moreover though, the data from these wards are not junk they are accurate reflection how noise and income are related in Toronto.
 
