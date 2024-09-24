@@ -15,30 +15,30 @@ library(tidyverse)
 #### Test data ####
 
 ## simulated data tests
-sim_noise_exmp_data <- 
-  read_csv("./data/simulation_data/sim_noise_exmp_data.csv")
+sim_noise_exemp_data <- 
+  read_csv("./data/simulation_data/sim_noise_exemp_data.csv")
 
 print("Testing No Na's\n")
-count(sim_noise_exmp_data %>% drop_na()) == count(sim_noise_exmp_data)
+count(sim_noise_exemp_data %>% drop_na()) == count(sim_noise_exemp_data)
 
-print("Testing Poverty Rate is a percentage")
-count (sim_noise_exmp_data %>% 
-         filter(poverty_rate > 1 | poverty_rate < 0)) == 0
+print("Testing only 25 wards from 1-25")
+count (sim_noise_exemp_data %>% 
+         filter(!(ward %in% c(1:25)))) == 0
 
 print("Issue Year always the same or less than the expected end year")
-count (sim_noise_exmp_data %>% 
+count (sim_noise_exemp_data %>% 
          filter(issue_year > expected_end_year)) == 0
 
 ## cleaned data tests
 noise_exmp_ward_data <- read_csv(
-  "./data/analysis_data/clean_noise_exmp_ward_data.csv")
+  "./data/analysis_data/clean_noise_exemp_ward_data.csv")
 
 print("Testing No Na's\n")
 count(noise_exmp_ward_data %>% drop_na()) == count(noise_exmp_ward_data)
 
-print("Testing Poverty percentage is a percentage")
+print("Testing only 25 wards from 1-25")
 count (noise_exmp_ward_data %>% 
-         filter(poverty_rate > 1 | poverty_rate < 0)) == 0
+         filter(!(ward %in% c(1:25)))) == 0
 
 print("Issue Year always the same or less than the expected end year")
 count (noise_exmp_ward_data %>% 

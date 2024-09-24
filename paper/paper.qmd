@@ -6,7 +6,7 @@ author:
 thanks: "Open Data Toronto: https://open.toronto.ca/"
 date: today
 date-format: long
-abstract: "TODO: FINISH THIS LATER"
+abstract: "TODO: FINISH THIS LATER (ABSTRACT)"
 format: pdf
 number-sections: true
 bibliography: references.bib
@@ -21,18 +21,43 @@ library(tidyverse)
 library(knitr)
 
 # TODO: switch area from kms2 to 10kms2
+# TODO: Add a table of contents
+# TODO: adding planning table and graph sketches to other
+# TODO add bibliography properly
+# TODO: add a brief section in the intro talking about the different types of
+# TODO: add section citations
+# of permit
 ```
+
+# Table of Contents
+
+TODO: Work in Progress
 
 
 # Introduction
 
-You can and should cross-reference sections and sub-sections. We use @citeR and @rohan.
+Noise pollution is a overlooked, but serious and common problem in modern cities. Noise pollution has been linked with heart issues, irregular sleep, hearing loss, and mental health issues (Iberdrola 2024 - fix citation later). Hence, Toronto city officials have identified noise pollution as a problem and created @NoiseBylaws to limit at what times certain noises like construction can occur. However, sometimes noise needs to be allowed during quiet hours. For instance, some building need to continue pouring cement overnight, otherwise the building will have safety risks. As a result, the Toronto government has also created a system of noise exemptions.
 
-The remainder of this paper is structured as follows. @sec-data....
+This paper explores whether or not these exemptions are getting abuse. Specifically, we want to know if lower-income communities are more likely to get noise exemptions. This is part of a much larger phenomenon, which is that poorer communities are suffer more from noise pollution compared to affluent ones. [Insert sentence showing the results from some external study] Moreover, all this does is further increase lifestyle differences between low-income and higher income-individuals. So, it is critical to make sure that Toronto's noise exemptions are not furthering this gap, especially since noise exemptions are often glance over in terms of their addition to noise pollution compared to other contributors like late night traffic and airport plane landings. This paper attempts to fill that gap.
 
+To do this, we used public available data on noise exemptions provided by the government of Toronto and we mapped the area of the exemption to the area's income. This was done by estimating the income by looking at the ward where the permit's company is working in. From that, we determined if there was a relationship between the two variables. Furthermore, we look at other factors such the type of permits given when determining the relationship. Overall, we determined that there was no evidence that lower-income communities were more likely to have more noise exemptions. On the contrary, we found moderate evidence for the opposite: higher income communities had more noise exemptions, not matter the type of exemptions that were given. This is important because it provides some evidence that noise exemptions are not disproportionately creating more noise pollution for lower income communities.
+
+In terms of the paper's structure, it is organized into three main sections not including the introduction and table of Contents. The section # explores the data, its origins, potential issues, and relationships, while the section # provides a deeper discussion of the findings from the data. Finally, the section # addresses the paper's limitations and suggests potential next steps for future research.
 
 
 # Data {#sec-data}
+
+## Overview
+
+All data for this investigation was provided by @OpenDataToronto. This data sets after @sec-datacleaning came to 1227 noise exemption permit details. Furthermore, this @OpenDataToronto library is created and maintained by government of Toronto. Specifically, this data was obtained from three different data sets provided in the library. The first data set was obtained from the Noise Exemption Permits package. This data set included everything related to noise exemption permits, including, the day the permit was given, the permit type, the conditions behind it's use, the ward the permit is operating in and more. More about this in @tbl-fulldatasample. This data set was last updated 2024-09-23.
+
+The rest of the data sets come from the Ward Profiles (25-Ward Model). This package contains all the information someone would need about Toronto ward's. It was last updated 2024-09-17. As for the data sets, the more important one comes from the 2021 Census. It contains demographic and socioeconomic data about all of the wards in Toronto. It's important to note here that some of the data in that dataset was created based on 25% samples of the census. Consequently, variable that were created based on 25% census samples will be denoted in @tbl-fulldatasample The final data set is simply a mapping of the each ward number to the ward's total area in squared kilometers.
+
+All data analysis was performed using @citeR, @tidyverse, @janitor, and @ggplot2. Also, @kintir was used in order to finalize and create the output of this report.
+
+## Data Cleaning {#sec-datacleaning}
+
+Some noise exemption data had missing values and those were rows. The main reason this occurred was because quite a few of noise exemption permit entries did not have ward numbers. Also all permit issue date and permit expected end date values were all converted to years for simplicity purposes as the paper is not concerned about exactly when these permits were issued and ended. It's is only concerned about when these permits were issued to determine whether the data is relevant to present day Toronto. Additionally, all three of data sets were merged into one data set so each permit has all the information is needs about the ward it is residing in. This was soley done to make creating graphs, tables, and other forms of analysis easier.
 
 ```{r}
 #| label: tbl-fulldatasample
@@ -56,12 +81,29 @@ noise_exemp_ward_data_og %>%
   kable(col.names = display_column_names)
 ```
 
-## Data History
+| Variable Name           | Description                                                   |
+|-------------------------|---------------------------------------------------------------|
+| Permit Type             | The type of the permit. More on this in @sec-permittypes       |
+|-------------------------|---------------------------------------------------------------|
+| Ward Number             | The number of the ward of the address the permit's company is working in  |
+|-------------------------|---------------------------------------------------------------|
+| Exemption Issue Year     | The year the permit was issued                                |
+|-------------------------|---------------------------------------------------------------|
+| Expected Permit End Year | The year the government expects this permit to end            |
+|-------------------------|---------------------------------------------------------------|
+| Ward Total Area          | The total area the ward takes in squared kilometers           |
+|-------------------------|---------------------------------------------------------------|
+| Ward Population          | The number of people that live in the ward                   |
+|-------------------------|---------------------------------------------------------------|
+| Ward Median Income       | The median income of people in that ward (CAD)               |
+
+
+### Data Years
 
 ```{r}
 #| label: fig-permityears
 #| tbl-cap: "TODO"
-#| tbl-sub: ["TODO", "TODO", "TODO"]
+#| tbl-sub: ["TODO", "TODO"]
 #| layout-ncol: 2
 #| echo: false
 #| warning: false
@@ -81,9 +123,11 @@ noise_exemp_ward_data_og %>% group_by(expected_end_year) %>%
 
 ```
 
+The table shows that almost all permits have been issued in 2024 and expected to end sometime in 2024 or 2025. It's is important to note that this was not deliberate choice and that this is merely a limitation of the data. However, this should not be viewed as a limitation because having all of the data being from 2019 and beyond makes sure that all this data is relevant to how noise exemption permits are issued now.
+
 \newpage
 
-## Types of Permits
+### Types of Permits {#sec-permittypes}
 
 ```{r}
 #| label: tbl-exemptioncategories
@@ -105,6 +149,32 @@ full_permit_type_table = noise_exemp_ward_data_og %>% group_by(permit_type) %>%
 
 full_permit_type_table
 ```
+
+Noise permits are applied to for a variety of reasons. These are all the ones listed in the data set. In reality there are more and take a look @NoiseToronto if interested in finding out more. It's clear that amplified sounds which are often required for things like concerted are the most common form of noise permit exemption. 
+
+| Permit Type           | Description                                                   |
+|-------------------------|---------------------------------------------------------------|
+| Amplified Sound         | Sound made by an electric device. Often required for musical festivals.|
+|-------------------------|---------------------------------------------------------------|
+| Construction             | Self explanatory (TODO)  |
+|-------------------------|---------------------------------------------------------------|
+| Continuous Pour     | Continuously pouring some liquid, like concrete, that cannot be interrupted|
+|-------------------------|---------------------------------------------------------------|
+| Large Crane | Some sort of work that requires a crane (usually for a high rise building)|
+|-------------------------|---------------------------------------------------------------|
+| Other Sound          | Self-explanatory           |
+|-------------------------|---------------------------------------------------------------|
+
+TODO (will add the rest of the types later).
+
+However, for this analysis we will group the permit types into construction related, non-constructed related, and other. This is done not only to make things simpler, but because often times these construction related permit types are necessary and cannot be avoid and could potentially benefit a community while things like amplified sound are usually not necessary.
+
+Non-construction type includes: Amplified
+
+Construction type includes: Construction, Continuous Pour, Large Crane
+
+Other includes: Other Sounds
+
 
 ```{r}
 #| label: tbl-relevantexemptioncategories
@@ -133,9 +203,10 @@ construction_permit_type_table
 
 ```
 
-\newpage
+Even after merging the construction types together. Non-construction or amplified sound types are by far the most common type permit, almost taking up 75% of permits.
 
-## Ward Information
+## Exemption Distribution by Ward
+
 
 ```{r}
 #| label: fig-wardtotalexemptions
@@ -143,8 +214,28 @@ construction_permit_type_table
 #| echo: false
 #| warning: false
 #| message: false
-# ward, number of occurrences
 
+ward_exemptions_bar <- noise_exemp_ward_data %>% 
+  ggplot(aes(x = ward, fill = permit_type)) +
+  geom_bar() +
+  theme_linedraw() +
+  labs(x = "Ward Number", y = "Number of Noise Exemptions")
+
+# TODO: add summary statistics for this graph
+
+ward_exemptions_bar
+```
+
+```{r}
+#| label: tbl-wardexemptionssummary
+#| tab-cap: "Noise Exemptions Summary And Outliers"
+#| fig-subcap: ["Summary", "Outliers"]
+#| layout-ncol: 2
+#| echo: false
+#| warning: false
+#| message: false
+
+# ward, number of occurrences
 ward_exemptions <- noise_exemp_ward_data %>% 
   select(ward, id, permit_type) %>% 
   group_by(ward) %>% 
@@ -154,53 +245,29 @@ ward_exemptions <- noise_exemp_ward_data %>%
               sum(permit_type == "non-construction"),
             other_exemptions = sum(permit_type == "other"))
 
-ward_exemptions_bar <- noise_exemp_ward_data %>% 
-  ggplot(aes(x = ward, fill = permit_type)) +
-  geom_bar() +
-  theme_linedraw() +
-  labs(x = "Ward Number", y = "Number of Noise Exemptions")
+five_number_summary <- ward_exemptions %>%
+  summarise(
+    min = min(exemptions),
+    Q1 = quantile(exemptions, 0.25),
+    median = median(exemptions),
+    Q3 = quantile(exemptions, 0.75),
+    max = max(exemptions),
+    IQR = IQR(exemptions)
+  )
 
-ward_exemptions_bar
+# calculate outliers
+# TODO: add titles
+ward_exemption_outliers <- ward_exemptions %>% filter(
+  exemptions < five_number_summary$Q1 - 1.5*five_number_summary$IQR |
+    exemptions > five_number_summary$Q3 + five_number_summary$IQR) %>% 
+  select(ward, exemptions)
+
+five_number_summary %>% kable()
+ward_exemption_outliers %>% kable()
 ```
+Based on the @fig-wardtotalexemptions we can see that most wards give out more non-construction permits that construction permits. Hence, it's important to see how income is related to number of exemptions based on each type, so general data results are not biased towards non-constructive exemptions.
 
-```{r}
-#| label: fig-warddetails
-#| fig-cap: "All Relevant Ward Details"
-#| fig-subcap: ["Ward Area","Ward Population", "Ward Median Income"]
-#| layout-ncol: 3
-#| echo: false
-#| warning: false
-#| message: false
-
-ward_dataset <- noise_exemp_ward_data %>% 
-  select(ward, ward_area_km2, ward_population, ward_median_income) %>%
-  # remove duplicates that occur because of data being joined
-  distinct()
-
-ward_area_plot = ward_dataset %>% 
-  ggplot(aes(x = ward, y = ward_area_km2)) +
-  geom_col() +
-  theme_linedraw() +
-  labs(x = "Ward Number", y = "Area (km squared)")
-  
-ward_population_plot = ward_dataset %>% 
-  ggplot(aes(x = ward, y = ward_population)) +
-  geom_col() +
-  theme_linedraw() +
-  labs(x = "Ward Number", y = "Population")
-
-ward_median_income_plot = ward_dataset %>% 
-  ggplot(aes(x = ward, y = ward_median_income)) +
-  geom_col() +
-  theme_linedraw() +
-  labs(x = "Ward Number", y = "Median Income (CAD)")
-
-
-
-ward_area_plot
-ward_population_plot
-ward_median_income_plot
-```
+Moreover, from @fig-wardtotalexemptions and @tbl-wardexemptionssummary, it's clear that wards 13, 11, and especially ten are outlines in terms of number of exemptions given compared to the rest of the data. However, for the purpose of this paper, we will not consider these data points as outliers, so they will not be discarded from the analysis. This is these are still wards of Toronto and their wards cannot be excluded when determining any conclusion or relationships.
 
 \newpage
 
@@ -216,8 +283,10 @@ ward_median_income_plot
 #| warning: false
 #| message: false
 
+# TODO: change this so that the general num_exemptions graph is
+# in it's own code black and the sub groups have a layout-ncol-2
 
-correlation_data <- noise_exemp_ward_data %>% 
+correlation_data <- noise_exemp_ward_data %>%
   group_by(ward, ward_median_income, ward_area_km2, 
            ward_population) %>% 
   summarise(
@@ -253,11 +322,6 @@ income_num_exemption
 income_nonconstruction_exemptions
 income_construction_exemptions
 
-# TODO: delete before submission
-test = correlation_data %>% filter(ward != 10)
-cor.test(test$ward_median_income, test$num_exemptions)
-cor.test(correlation_data$ward_median_income, correlation_data$num_exemptions)
-
 
 # keep in mind that relationship looks weaker after potetnial outlier point
 # removed
@@ -265,7 +329,9 @@ cor.test(correlation_data$ward_median_income, correlation_data$num_exemptions)
 # TODO: ADD a section about these graphs even after they have been removed
 ```
 
-\newpage
+Based on the @fig-wardtotalexemptionsscatterplots. There is not seem to be a negative relation ship between median ward income and number of exemptions. However, by looking at the plot, there does seem to me a moderate postive relationship between median income and number of exemptions for all types of permit, although the constrution permit plot's relationship does apear to be weaker.
+
+It is important to note that if we hypothetically removed the outliers (ward 10, 11, 13), the relationship would appear to be a bit weaker, but the relationship still seems reasonable.
 
 ## Testing for Hidden Confounding relationships
 
@@ -273,7 +339,7 @@ cor.test(correlation_data$ward_median_income, correlation_data$num_exemptions)
 #| label: fig-confoudingplots
 #| fig-cap: "Ward Median Income Relationship With Common Potential Confounds"
 #| fig-subcap: ["TODO", "TODO"]
-#| layout-ncol: 3
+#| layout-ncol: 2
 #| echo: false
 #| warning: false
 #| message: false
@@ -282,40 +348,27 @@ cor.test(correlation_data$ward_median_income, correlation_data$num_exemptions)
 correlation_data <- noise_exemp_ward_data %>% 
   select(ward, ward_area_km2, ward_population, ward_median_income)
 
-ward_income_pop <- correlation_data %>% filter(ward != 10) %>% 
-  ggplot(aes(ward_median_income, ward_population)) +
+ward_income_pop <- correlation_data %>% 
+  ggplot(aes(ward_population, ward_median_income, )) +
   geom_point(alpha = 0.7) +
   theme_linedraw() +
-  labs(x = "Median Income", y = "Population") + 
+  labs(y = "Median Income", x = "Population") + 
   geom_text(aes(label = ward), vjust = 1.5, hjust = 0.5, size = 2)
 
 ward_income_area <- correlation_data %>% 
-  ggplot(aes(ward_median_income, ward_area_km2)) +
+  ggplot(aes(ward_area_km2, ward_median_income)) +
   geom_point(alpha = 0.7) +
   theme_linedraw() +
-  labs(x = "Median Income", y = "ward_area_plot (kms squared)") + 
+  labs(y = "Median Income", x = "ward area (kms squared)") + 
   geom_text(aes(label = ward), vjust = 1.5, hjust = 0.5, size = 2)
 
 
 ward_income_pop
 ward_income_area
-
-# TODO: DELETE BELOW CODE
-
-cor.test(correlation_data$ward_median_income, correlation_data$ward_population)
-cor.test(correlation_data$ward_median_income, correlation_data$ward_area_km2)
-
-test = correlation_data %>% filter(ward != 10)
-cor.test(test$ward_median_income, test$ward_population)
-cor.test(test$ward_median_income, test$ward_area_km2)
-
-# keep in mind that relationship looks weaker after potetnial outlier point
-# removed (this is especially true for population)
 ```
+@fig-confoudingplots explores if median income can be predicted by a ward's population size or area. Based on the plots, there does not appear to be a reltionship between ward median income and the ward's area. As for population, there does seem to be a moderate to weak relationship between ward population and median income.
 
-
-```
-
+Nevertheless, if we hypotectically remove the outliers from population graph. Then there is no relationship between population and median income.
 
 \newpage
 
@@ -329,12 +382,19 @@ If my paper were 10 pages, then should be be at least 2.5 pages. The discussion 
 
 ## Third discussion point
 
-## Weaknesses and next steps
+## Weaknesses and Next Steps
 
 Weaknesses/Limitations and next steps should also be included.
 
 \newpage
 
+<!-- TODO: DELETE THIS CODE AND MOVE IT SOMEWHERE ELSE  -->
+
+# Special Thanks
+
+@citeR and @rohan.
+
+\newpage
 
 # References
 

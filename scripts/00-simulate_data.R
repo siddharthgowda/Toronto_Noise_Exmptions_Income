@@ -31,7 +31,7 @@ sim_noise_exmp_data <- tibble(
   type = sample(permit_types, size = n, replace = TRUE),
   ward = sample(wards, size = n, replace = TRUE),
   issue_year = sample(issue_years, size = n, replace = TRUE),
-  poverty_rate = rnorm(n, 0.10, 0.03),
+  median_income = rnorm(n, 50000, 13000),
   population = floor(rnorm(n, 100000, 25000)),
   ward_area_kms_sq = rnorm(n, 30, 10)
 )
@@ -46,7 +46,7 @@ sim_noise_exmp_data <- sim_noise_exmp_data %>%
   mutate(id = row_number())
 
 write_csv(sim_noise_exmp_data, 
-         "./data/simulation_data/sim_noise_exmp_data.csv")
+         "./data/simulation_data/sim_noise_exemp_data.csv")
 
 
 
