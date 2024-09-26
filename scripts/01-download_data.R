@@ -37,8 +37,6 @@ ward_resources <- list_package_resources("6678e1a6-d25f-4dff-b2b7-aa8f042bc2eb")
 
 # in xlsx
 census_dataset <- get_resource("16a31e1d-b4d9-4cf0-b5b3-2e3937cb4121")
-ward_areas <- get_resource("9398da69-0622-4eb1-a125-4f8c7f1016a4")
-
 
 #### Save data ####
 # change the_raw_data to whatever name you assigned when you downloaded it.
@@ -47,8 +45,6 @@ write_csv(noise_exmeption_dataset,
 # for some reason r wasn't finding the function
 # unless writexl package was explicitly defined
 writexl::write_xlsx(census_dataset, "./data/raw_data/raw_census_dataset.xlsx")
-writexl::write_xlsx(ward_areas, 
-                    "./data/raw_data/raw_ward_areas_dataset.xlsx")
 
 
          
