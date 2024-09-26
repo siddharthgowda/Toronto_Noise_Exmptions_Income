@@ -5,7 +5,7 @@ author:
 date: today
 date-format: long
 thanks: "Code and data are available at: https://github.com/siddharthgowda/Toronto_Noise_Exmptions_Income "
-abstract: "Low-income and minority communities often incur the worst of noise pollution which in turn lowers their quality of life. This paper investigates if low-income and minority communities are more likely to receive noise permit exemptions. Contrary to expectations, the findings indicate that low-income and minority communities do not have a higher likelihood of receiving exemptions, In fact we found evidence for the opposite being true, that communities with higher income and less minorities recieved more noise exemption permits."
+abstract: "Low-income and minority communities often incur the worst of noise pollution which in turn lowers their quality of life. This paper investigates if low-income and minority communities are more likely to receive noise permit exemptions. Contrary to expectations, the findings indicate that low-income and minority communities do not have a higher likelihood of receiving exemptions. In fact we found evidence for the opposite being true, that communities with higher income and less minorities recieved more noise exemption permits."
 format: pdf
 number-sections: true
 bibliography: references.bib
@@ -24,27 +24,27 @@ library(scales)
 
 # Introduction
 
-Noise pollution is a overlooked, but serious and common problem in modern cities. Noise pollution has been linked with heart issues, irregular sleep, hearing loss, and mental health issues [@IberdrolaNoisePollution]. Hence, Toronto city officials have identified noise pollution as a problem and created Noise Bylaws [@torontonoise] to limit at what times certain noises like construction can occur. However, sometimes noise needs to be allowed during quiet hours. For instance, some building need to continue pouring cement overnight, otherwise the building will have safety risks. As a result, the Toronto government has also created a system of noise exemptions.
+Noise pollution is a overlooked, but serious and common problem in modern cities. Noise pollution has been linked with heart issues, irregular sleep, hearing loss, and mental health issues [@IberdrolaNoisePollution]. Hence, Toronto city officials have identified noise pollution as a problem and created Noise Bylaws [@torontonoise] to limit what times certain noises like construction can occur. However, sometimes noise needs to be allowed during quiet hours. For instance, some building may need to continue pouring cement overnight, otherwise the building will have increased safety risks. As a result, the Toronto government has also created a system of noise exemptions.
 
 This paper explores whether or not these exemptions are getting abuse. Specifically, we want to know if lower-income and minority communities are more likely to get noise exemptions. This is part of a much larger phenomenon, which is that poorer and minority communities suffer more from noise pollution compared to affluent ones [@Seltenrich2018]. Moreover, all this does is further increase disadvantages low-income communities and minorities have. So, it is critical to make sure that Toronto's noise exemptions are not further dividing this gap, especially since noise exemptions are often glanced over in terms of their addition to noise pollution compared to other contributors like late night traffic and airport plane landings.
 
 To explore this topic, we used public available data on noise exemptions provided by the government of Toronto and we mapped the area of the exemption to the area's income. This was done by estimating the income by looking at the ward where the permit's company is working in. From that, we determined if there was a relationship between the permits and whether the community was a minority or low-income. Furthermore, we looked at other factors, in particular, the type of permits given when determining the relationship. Overall, we determined that there was no evidence that lower-income communities or minority communities were more likely to have more noise exemptions. On the contrary, we found moderate evidence for the opposite: higher income communities and communities with less minorities had more noise exemptions, not matter the type of exemptions that were given. This is a critical finding because it provides some evidence that noise exemptions are not disproportionately creating more noise pollution for lower income and minority communities.
 
-In terms of the paper's structure, it is organized into four main sections not including the introduction and table of Contents. The section @sec-data explores the data, its origin, potential issues with the data, and how it was cleaned into the data used in this paper. Section @sec-results explores potential relationship between certain data variables while section @sec-discussion provides a deeper discussion of the findings from the data including limitations of the study and next steps.
+In terms of the paper's structure, it is organized into four main sections not including the introduction. The section @sec-data explores the data, its origin, and how it was cleaned. Section @sec-results explores potential relationships between certain data variables. Finally, section @sec-discussion provides a deeper discussion of the findings from the data including limitations of the study and next steps.
 
 # Data {#sec-data}
 
 ## Overview
 
-All data for this investigation was provided by Open Data Toronto [@opendatatoronto]. Open Data Toronto [@opendatatoronto] is a library that is created and maintained by government of Toronto. Specifically, this data was obtained from two different data sets provided in the library. The first data set was obtained from the Noise Exemption Permits package. This data set included everything related to noise exemption permits, including, the day the permit was given, the permit type, the conditions behind it's use, the ward the permit is operating in and more. The data was originally taken from the all of the accepted noise exemption permit applications. This data set was last updated 2024-09-23.
+All data for this investigation was provided by Open Data Toronto [@opendatatoronto]. Open Data Toronto [@opendatatoronto] is a library that is created and maintained by government of Toronto. Specifically, this data was obtained from two different data sets provided in the library. The first data set was obtained from the Noise Exemption Permits package. This data set included everything related to noise exemption permits, including, the day the permit was given, the permit type, the ward the permit is operating in and more. The data was originally taken from all of the accepted noise exemption permit applications. This data set was last updated 2024-09-23.
 
-The rest of the data came from the Ward Profiles (25-Ward Model). It was last updated 2024-09-17. The data used in the packages comes from the 2021 Census and contains demographic and socioeconomic data about all of the wards in Toronto. It is important to note here that some of the data in that data set was created based on 25% samples of the census. Consequently, variables that were created based on 25% census samples will be denoted in @tbl-fulldatasample
+The rest of the data came from the Ward Profiles (25-Ward Model) package. It was last updated 2024-09-17. The data used in the packages comes from the 2021 Census and contains demographic and socioeconomic data about all of the wards in Toronto. It is important to note here that some of the data in that data set was created based on 25% samples of the census. Variables that were created based on 25% census samples will be denoted in @tbl-fulldatasample.
 
 All data analysis was performed using R [@citeR], tidyverse [@tidyverse], janitor [@janitor], ggplot2 [@ggplot2], and scales [@scales]. Also, knitr [@knitr] was used in order to finalize and create the output of this report.
 
 ## Data Cleaning {#sec-datacleaning}
 
-Some noise exemption data had missing values and those were rows. The main reason this occurred was because quite a few of noise exemption permit entries did not have ward numbers. Additionally, all permit issue date and permit expected end date values were all converted to years for simplicity purposes as the paper is not concerned about exactly when these permits were issued and ended. We also decided to shrink down the number of permit type categories. In the end, we decided on three categories, "construction", "non-construction", and "other". We did this because we realized that most of the permit categories were construction related categories and those should be treated similarly since many of those permits are critical to maintaining infrasture or building up communities. Hence, those exemptions should be treated differently than "non-construction" exemptions, since those do not directly help a community. For more information go to @sec-typemerge.
+Some noise exemption data had missing values and those rows were removed. The main reason this occurred was because some noise exemption permit entries did not have ward numbers. Additionally, all permit issue dates and permit expected end dates were converted to years for simplicity purposes as the paper is not concerned about exactly when these permits were issued and ended. We also decided to shrink down the number of permit type categories. In the end, we decided on three categories, "construction", "non-construction", and "other". We did this because we realized that most of the permit categories were construction related and those should be treated similarly since many of those permits are critical to maintaining infrastructure or building up communities. Hence, those exemptions should be treated differently than "non-construction" exemptions, since those do not directly help a community. For more information go to @sec-typemerge.
 
 ```{r}
 #| label: tbl-fulldatasample
@@ -70,9 +70,9 @@ noise_exemp_ward_data_og %>%
 
 ### Variable Description
 
-**Permit Type**: The type of the permit. Permits can be either Construction or Non-Construction based  
+**Permit Type**: The type of the permit. Permits can be either type Construction, Non-Construction or Other  
 
-**Ward Number**: The number of the ward of the address the permit's company is working in  
+**Ward Number**: The ward in which the permit is allowed to be used
 
 **Exemption Issue Year**: The year the permit was issued  
 
@@ -82,7 +82,7 @@ noise_exemp_ward_data_og %>%
 
 **Ward Average Income**: The average income of people in that ward (CAD). This data was taken from a 25% sample of the census. 
 
-**Ward Minority Percentage**: Percentage of a ward's population that is a minority  
+**Ward Minority Percentage**: Percentage of a ward's population that is a minority. This data was taken from a 25% sample of the census. 
 
 ### Data Years
 
@@ -114,7 +114,7 @@ all_year_data %>% kable(
 
 ```
 
-The table shows that almost all permits have been issued in 2024 and expected to end sometime in 2024 or 2025. It's is important to note that this was not deliberate choice and that this is merely a limitation of the data. However, this should not be viewed as a limitation because having all of the data being from 2019 and beyond makes sure that all this data is relevant to how noise exemption permits are issued now.
+The table shows that almost all permits have been issued in 2024 and are expected to end sometime in 2024 or 2025. It is important to note that this was not deliberate choice and that this is merely a limitation of the data. However, this should not be viewed as a limitation because having all of the data being from 2019 and beyond makes sure that all this data is relevant to how noise exemption permits are issued now.
 
 # Results {#sec-results}
 
@@ -170,9 +170,9 @@ ward_exemptions_box <- correlation_data %>%
 ward_exemptions_bar
 ward_exemptions_box
 ```
-Based on the @fig-wardtotalexemptions we can see that most wards give out more non-construction permits that construction permits. Hence, it's important to see how income is related to number of exemptions based on each type, so general data results are not biased towards non-constructive exemptions.
+Based on the @fig-wardtotalexemptions we can see that most wards give out more non-construction permits than construction permits. Hence, it will be important to see how income and minority population are related to number of exemptions based on each type, so general data results are not biased towards non-constructive exemptions.
 
-Moreover, from @fig-wardtotalexemptions and @tbl-wardexemptionssummary, it's clear that wards 13, 11, and especially 10 are outliers in terms of number of exemptions given compared to the rest of the data. However, for the purpose of this paper, we will not consider these data points as outliers, so they will not be discarded from the analysis. These are still wards of Toronto and their wards cannot be excluded when determining any conclusion or relationships.
+Moreover, from @fig-wardtotalexemptions and @tbl-wardexemptionssummary, it is clear that wards 13, 11, and especially 10 are outliers in terms of number of exemptions given compared to the rest of the data. However, for the purpose of this paper, we will not consider these data points as outliers, so they will not be discarded from the analysis. These are still wards of Toronto and their wards cannot be excluded when determining any conclusion or relationships.
 
 ## Relationships {#sec-relationships}
 
@@ -224,9 +224,9 @@ income_nonconstruction_exemptions
 income_construction_exemptions
 
 ```
-@fig-wardtotalexemptionsscatterplots explore the relationship between the average income of a ward and the number of noise permits given in total and by type. Based on the graphs, there seems to be a moderate positive relationship between average income and number of exemptions for all types of permit. In this paper, the term moderate description how accurately you can predict a variable with another variable, not how much impact one variable has on the other variable. 
+@fig-wardtotalexemptionsscatterplots explore the relationship between the average income of a ward and the number of noise permits given in total and by type. Based on the graphs, there seems to be a moderate positive relationship between average income and the number of exemptions for all types of permit. In this paper, the term moderate describes how accurately you can predict a variable with another variable, not how much impact one variable has on the other variable.
 
-Two other things are also important to note here. One is that, the income to construction graph seems to have two different postive relationships. Additionally, if we hypothetically removed the outliers (ward 10, 11, 13), the relationship would appear to be a bit stronger, particularly in the total exemptions and non-construction exemption cases. Plots with outliers excluded are in @fig-wardtotalexemptionsnooutliers.
+Two other things are also important to note here. One is that, the income to construction graph seems to have two different positive relationships. Additionally, if we hypothetically removed the outliers (ward 10, 11, 13), the relationship would appear to be a bit stronger, particularly in the total exemptions and non-construction exemption cases. Plots with outliers excluded are in @fig-wardtotalexemptionsnooutliers.
 
 ### Minoirty Relationship
 
@@ -271,7 +271,7 @@ minority_num_exemption
 minority_nonconstruction_exemptions
 minority_construction_exemptions
 ```
-@fig-exemptionsminorityscatterplots explore the relationship between the percentage of minorities in a ward and the number of noise permits given in total and by type. Based on the graphs, there does seem to be a negative relationship between the number of exemptions given @sec-incomeexceptions. However, this relationship is a bit weaker the one found in @sec-incomeexceptions. Similarly, there does seem to be a two different sets of relationships for minority population percentage and its ability to predict construction exemptions. Furthermore, like @sec-incomeexceptions, if we consider the case where the potential outliers (ward 10, 11, and 13) are removed, the minority population percentage will look like much stronger predictors for the total number of exemptions and non-construction exemptions. Plots with outliers excluded are in @fig-exemptionsminoritynooutliers.
+@fig-exemptionsminorityscatterplots explore the relationship between the percentage of minorities in a ward and the number of noise permits given in total and by type. Based on the graphs, there does seem to be a negative relationship between the number of exemptions given @sec-incomeexceptions. However, this relationship is a bit weaker the one found in @sec-incomeexceptions. Similarly, there does seem to be two different sets of relationships for minority population percentage and its ability to predict construction exemptions. Furthermore, like @sec-incomeexceptions, if we consider the case where the potential outliers (ward 10, 11, and 13) are removed, the minority population percentage will look a bit better as predictors for the total number of exemptions and non-construction exemptions. Plots with outliers excluded are in @fig-exemptionsminoritynooutliers.
 
 ### Average Income, Minority Population, Ward Population Relationship
 
@@ -316,7 +316,7 @@ minority_population_ward_population
 ward_population_avg_income
 ```
 
-@fig-minorityincomeconfound explores the relationship between the percentage of a ward's popualtion that is minority and the ward's average income, the population of a ward and the percentage of that population that is minority, and the ward's average income compared to it's population.
+@fig-minorityincomeconfound explores the relationship between the percentage of a ward's population that is a minority and the ward's average income; the population of a ward and the percentage of that population that is minority; and the ward's average income compared to it's population.
 
 Based on the figures there is little to no evidence that there is a relationship between ward population and the percentage of population that is minority and the same holds true for ward population and ward average income. However, there seems to be a very strong relationship between the percentage of a ward's population that is a minority and the ward's average income, indicating that the variables are very good predictors of each other.
 
@@ -324,7 +324,7 @@ Based on the figures there is little to no evidence that there is a relationship
 
 # Discussion {#sec-discussion}
 
-In this paper, we explored whether or not low-income and minority communities are more likely to be give noise exemption permits compared to other more affluent communities. We did this grouping noise permit exemption application data by ward and using public census data to associate each year with its average income and percentage of its population that are minorities. This question is relevant since there are numerous research articles which suggest that low-income and minority communities are more affected by noise pollution. Thus, we wanted to make sure that Toronto's noise permit exemptions are not further exacerbating this problem. Overall, we found no evidence that lower-income communities are given more noise exemptions. In fact, we found evidence for opposite: more affluent communities with less minorities had more noise exemptions given.
+In this paper, we explored whether or not low-income and minority communities are more likely to be give noise exemption permits compared to other more affluent communities. We did this by grouping noise permit exemption application data by ward and using public census data to associate each ward with its average income and percentage of its population that are minorities. This question is relevant since there are numerous research articles which suggest that low-income and minority communities are more affected by noise pollution. Thus, we wanted to make sure that Toronto's noise permit exemptions are not further exacerbating this problem. Overall, we found no evidence that lower-income and minority communities are given more noise exemptions. In fact, we found evidence for opposite: more affluent communities with less minorities had more noise exemptions given.
 
 
 ## Null Findings
@@ -335,23 +335,23 @@ These findings are important for government officials because lower-income and m
 
 ## Unexpected Relationship
 
-Surprisingly, we discovered that typically the higher the ward's average income and the more noise permit exemptions have been accepted. This can be seen in @fig-wardtotalexemptionsscatterplots. Moreover, based on @fig-wardtotalexemptionsscatterplots we also know that this same relationship exists even after casing for construction and non-construction based permits. Furthermore, it is important to note here that for the construction permit graph that there seems to two different potential trend lines. This suggests that there might be another variable in addition to a ward's average income that combined could create an extremely accurate prediction of a ward's total number of construction type permits.
+Surprisingly, we discovered that typically the higher the ward's average income the more noise permit exemptions have been accepted. This can be seen in @fig-wardtotalexemptionsscatterplots. Moreover, based on @fig-wardtotalexemptionsscatterplots we also know that this same relationship exists even after casing for construction and non-construction based permits. Furthermore, it is important to note here that for the construction permit graph that there seems to two different potential trend lines. This suggests that there might be another variable in addition to a ward's average income that combined could create an extremely accurate prediction of a ward's total number of construction type permits.
 
-While these conclusion might seem strange at first, they make sense practically as well, especially for construction. This is because it is reasonable to assume that higher income-areas have more construction permits since more companies will want to invest in those areas, build building. Additionally, those same companies and people will need to continue to maintaining those building. Thus, these findings can be used by city officials to help raise create initiatives to invest and develop lower income areas.
+While these conclusion might seem strange at first, they make sense practically as well, especially for construction. This is because it is reasonable to assume that higher income-areas have more construction permits since more companies will want to invest in those areas and build building. Additionally, those same companies and people will need to continue to maintaining those building. Thus, these findings can be used by city officials to help create initiatives to invest and develop lower income areas.
 
-As for minority communities and noise permit exemptions, we can come to the similar conclusions to similar conclusion to the relationship of ward average income and noise permit exemptions, but in the opposite direction. Based on @fig-exemptionsminorityscatterplots, there is some evidence to suggest that having a higher percentage of minorities in a community is associated with less noise permit applications. However, this relationship between the two variable in mostly likely indirect. More on that in @sec-confounding.
+As for minority communities and noise permit exemptions, we can come to similar conclusions for the relationship of ward average income and noise permit exemptions, but in the opposite direction. Based on @fig-exemptionsminorityscatterplots, there is some evidence to suggest that having a higher percentage of minorities in a community is associated with less noise permit applications. However, this relationship between the two variable in mostly likely indirect. More on that in @sec-confounding.
 
 ## Confounding Variable Analysis and Potential Casuality {#sec-confounding}
 
-The strongest evidence of a confounding relationship is shown in @fig-minorityincomeconfound, particularly regarding the connection between a ward's average income and the percentage of minorities in that ward. A confounding relationship means that while it may seem like there is a direct link between variable X (percentage of minorities) and variable Y (total number of noise exemption permits), the true relationship is influenced by variable Z. In this case, variable Z affects both variable X and variable Y, which can create a misleading impression of their relationship. In this instance, we suspect that a ward's average income is the confounding variable (Z). This is because in there @fig-minorityincomeconfound appears to be a very strong relationship where the higher the percentage of ward's population that is a minority and the lower the ward's average income is. Importantly, the average ward income shows a slightly stronger relationship with total noise exemptions than the relationship between noise exemptions and the percentage of minorities. This supports the idea that average ward income is the confounding variable, rather than the minority population.
+The strongest evidence of a confounding relationship is shown in @fig-minorityincomeconfound, particularly regarding the connection between a ward's average income and the percentage of minorities in that ward. A confounding relationship means that while it may seem like there is a direct link between variable X (percentage of minorities) and variable Y (total number of noise exemption permits), the true relationship is influenced by variable Z. In this case, variable Z affects both variable X and variable Y, which can create a misleading impression of their relationship. In this instance, we suspect that a ward's average income is the confounding variable (Z). This is because in @fig-minorityincomeconfound there appears to be a very strong relationship where the higher the percentage of ward's population that is a minority, the lower the ward's average income is. Importantly, the average ward income shows a slightly stronger relationship with total noise exemptions than the relationship between noise exemptions and the percentage of minorities. This supports the idea that average ward income is the confounding variable, rather than the minority population.
 
-In terms of causality, one of the methods we used to determine this was to see if there was a relationship between a ward's population, its average income, and the percentage of the population that are minorities. We did this because it is reasonable to expect that ward's that have higher populations will have more noise exemptions that others. However, based on @fig-minorityincomeconfound there is no evidence of a relationship between a ward's population and the other variables of interest. This further suggests that average ward income could have a casual effect on the number of noise exemptions a ward has. Nonetheless, there are numerous other potential confounds that would need to be tested for in order to come to that conclusion. More on confounds in @sec-weaknessnextsteps.
+In terms of causality, one of the methods we used to determine this was to see if there was a relationship between a ward's population, its average income, and the percentage of the population that are minorities. We did this because it is reasonable to expect that the wards with higher populations will have more noise exemptions than others. However, based on @fig-minorityincomeconfound there is no evidence of a relationship between a ward's population and the other variables of interest. This further suggests that average ward income could have a casual effect on the number of noise exemptions a ward has. Nonetheless, there are numerous other potential confounds that would need to be tested for in order to come to that conclusion. More on confounds in @sec-weaknessnextsteps.
 
 ## Weaknesses and Next Steps {#sec-weaknessnextsteps}
 
-The biggest weakness in this study was the use of wards as aggregators. The loss of specificity of the data when using wards made a few outliers (Wards 10, 11, and 13) have significant impact on the potential relationships that could be formed with income and noise exemptions. Unfortunatly, wards 10, 11, and 13 cannot be ignored until most outliers. This is because there are only 25 wards in Toronto, so removing three data points is removing a lot of data. Moreover though, the data from these wards are not junk, and they are accurate reflections how noise, income, and minority populations are related in Toronto.
+The biggest weakness in this study was the use of wards as aggregators. The loss of specificity when using wards made a few outliers (Wards 10, 11, and 13) have significant impact on the potential relationships that could be formed with income and noise exemptions. Unfortunately, wards 10, 11, and 13 cannot be ignored unlike most outliers. This is because there are only 25 wards in Toronto, so removing three data points is removing a lot of data. Moreover, the data from these wards are not junk, and they are accurate reflections how noise, income, and minority populations are related in Toronto.
 
-Additionally, using wards to determine socio-economic status can quickly lead to over generalized results. For instance, simply because a ward on average is richer than other wards, it does not mean that particular area where the noise permit has been used given is a rich area. Hence in future explorations of this topic, the first step would be to determine even more specifically the socioeconomic status of an area. This could be based on a specific addresses given in the permit application. Then based on this do similar analysis to determine if there is a true relationship between income and noise permits. Furthermore, in future studies would also benefit from trying to model the relationship income and noise exemptions. Not only does create a more in depth quantification of the relationship, it also provides a much more throughout way of factoring for confounding variables.
+Additionally, using wards to determine socio-economic status can quickly lead to over generalized results. For instance, simply because a ward on average is richer than other wards, it does not mean that particular address where the noise permit has been used given is a rich area. Hence in future explorations of this topic, the first step would be to determine even more specifically the socioeconomic status of an area. This could be based on a specific addresses given in the permit application. Then based on this do similar analysis to determine if there is a true relationship between income and noise permits. Furthermore, future studies would also benefit from trying to model the relationship income and noise exemptions. Not only does this create a more in depth quantification of the relationship, it also provides a much more thorough way of factoring for confounding variables.
 
 \newpage
 
@@ -375,7 +375,7 @@ full_permit_type_table = noise_exemp_ward_data_og %>% group_by(permit_type) %>%
 full_permit_type_table
 ```
 
-Noise permits are applied to for a variety of reasons. These are all the ones that exist in the data set. In reality there are more and take a look at Toronto Noise Bylaws [@torontonoise] if interested in finding out more. It is important to note that some sound types had subcategories like "amplified sound (level 1)". These subcategories follow the same rules as their real category (in this case it is "amplified sound") except they are given a sound level.
+Noise permits are applied to for a variety of reasons. These are all the ones that exist in the data set. In reality there are more, so take a look at Toronto Noise Bylaws [@torontonoise] for more information. Also, it is important to note that some sound types had subcategories like "amplified sound (level 1)". These subcategories follow the same rules as their real category (in this case it is "amplified sound") except they are given a sound level.
 
 Types were merged based on if they were relevant to construction or urban maintenance. So we had one category called "construction". This includes "construction", "continuous pour", "large crane", and "continuous pour and/or large crane" from the original data set. The "non-construction" data set includes all of the amplified sound exemptions, and the rest were placed in an "other" type.
 
@@ -515,7 +515,8 @@ five_number_summary <- ward_exemptions %>%
     sd = sd(exemptions)
   )
 
-# ward 10, 11, 13, but this table doesn't need to be shown just described
+# ward 10, 11, 13, but this table doesn't need to be shown but only exists
+# for author's reference
 ward_exemption_outliers <- ward_exemptions %>% filter(
   exemptions < five_number_summary$Q1 - 1.5*five_number_summary$IQR |
     exemptions > five_number_summary$Q3 + five_number_summary$IQR) %>% 
