@@ -1,25 +1,27 @@
 LLM: ChatGPT-4.
 Date: 22 Sepember 2024 to 26 September 2024
 
-# Report was generated using ChatGPT I asked it...
+# Report was generated using ChatGPT I asked it to do
 
-"give me a report of all the question I have asked and all of your responses and put it to me in a text file"
-
-Below is what is gave me.
-
-# Simplifying the report of questions and answers into a text format
-report_simple = """
 1. Question: "readxl docs r"
-   Response: This response was skipped.
+   Response: install.packages("readxl")
+   library(readxl)
+   df <- read_excel("path_to_file.xlsx")
+   df <- read_excel("path_to_file.xlsx", sheet = "Sheet1")
 
 2. Question: "save xlsx file using this package"
-   Response: This response was skipped.
+   Response: library(writexl)
+   write_xlsx(df, "file_name.xlsx")
 
 3. Question: "given a cell value in a df how to find the exact row number"
-   Response: This response was skipped.
+   Response: row_num <- which(apply(df, 1, function(row) any(row == "Chicago")))
+   print(row_num)
 
 4. Question: "is this compatible with tidyverse or should I just use base r functionality"
-   Response: This response was skipped.
+   Response: row_num <- df %>% 
+   filter(Name == "Bob") %>% 
+   pull(row_number())
+   rint(row_num)
 
 5. Question: "I have a df where the rows should be columns and columns should be rows how do I flip it"
    Response: You can use the `t()` function in R to transpose the rows and columns of a dataframe. For a tibble or dataframe, use:
@@ -46,10 +48,12 @@ report_simple = """
      mutate(new_column = str_extract(column_name, "\\d+"))
 
 9. Question: "no there is no comma in the string"
-   Response: This response was skipped.
+   Response: df_clean <- df %>%
+   mutate(text_column = str_extract(text_column, "\\d+"))
 
 10. Question: "no it's like this c('name', 'num')"
-    Response: This response was skipped.
+    Response: df_clean <- df %>%
+    mutate(text_column = str_extract(text_column, "\\d+$"))
 
 11. Question: "table joins in r"
    Response: You can join two tables in R using `dplyr::left_join()`, `inner_join()`, `right_join()`, or `full_join()`.

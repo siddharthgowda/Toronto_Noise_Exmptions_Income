@@ -2,7 +2,7 @@
 
 ## Overview
 
-The repository contains all documents related to this paper about the relationship between noise exemptions in Toronto and lower-income and minority communities. Further details about what exactly is contained in the repo is in the file structure section. All aspects of this file are reproducible. If you want to reproduce some results, you should take a look at the scripts folder first so you can download the data.
+The repository contains all documents related to this paper about the relationship between noise exemptions in Toronto and lower-income and minority communities. Further details about what exactly is contained in the repo is in the file structure section. All aspects of this file are reproducible. If you want to reproduce some results, you should run all of the script files first, starting from file 00 and ending at file 03. Then you should run the paper.qmd file in the paper folder.
 
 
 ## File Structure
@@ -18,4 +18,4 @@ The repo is structured as:
 
 ## Statement on LLM usage
 
-Aspects of the code were written with the help of chatgpt. The entire chat history is available in inputs/llms/usage.txt.
+Aspects of the code were written with the help of chatgpt. The entire chat history is available in other/llms/usage.txt.
