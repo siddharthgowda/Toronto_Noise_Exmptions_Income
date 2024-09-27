@@ -1,7 +1,7 @@
 LLM: ChatGPT-4.
 Date: 22 Sepember 2024 to 26 September 2024
 
-# Report was generated using ChatGPT I asked it to do
+# Report was generated partially using chatgpt
 
 1. Question: "readxl docs r"
    Response: install.packages("readxl")
